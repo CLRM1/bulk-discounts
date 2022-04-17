@@ -1,15 +1,16 @@
 <h1>Admin Merchant Index Page</h1><br>
 
+<div id="top_5_merchants">
+  <h4>Top 5 merchants:</h4>
+  <% @merchants.top_five.each do |merchant| %>
+  <div id="merchant-<%= merchant.id %>">
+    <h3><%= link_to "#{merchant.name}", "/admin/merchants/#{merchant.id}" %></h3>
+    <p>Total Revenue: $<%= merchant.total_revenue.to_s.insert(-3, '.') %></p>
+  </div>
+  <% end %>
+</div>
+
 <h2>List of All Merchants:</h2>
 <% @merchants.each do |merchant| %>
   <h3>-<%= link_to "#{merchant.name}", "/admin/merchants/#{merchant.id}" %></h3>
 <% end %>
-
-<div id="top_5_merchants">
-  <% @merchants.top_five.each do |merchant| %>
-    <div id="merchant-<%= merchant.id %>">
-      <h3><%= link_to "#{merchant.name}", "/admin/merchants/#{merchant.id}" %></h3>
-      <p>Total Revenue: $<%= merchant.total_revenue.to_s.insert(-3, '.') %></p>
-    </div>
-  <% end %>
-</div>
