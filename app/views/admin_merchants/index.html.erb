@@ -12,5 +12,17 @@
 
 <h2>List of All Merchants:</h2>
 <% @merchants.each do |merchant| %>
+  <div id="merchants-<%= merchant.id %>">
+
   <h3>-<%= link_to "#{merchant.name}", "/admin/merchants/#{merchant.id}" %></h3>
+  <% if merchant.status == 'enabled' %>
+    Status: <%= 'available' %>
+    <%= button_to "Disable #{merchant.name}", "/merchants/#{merchant.id}?button=true", method: :patch %><br>
+  <% else merchant.status == 'disabled' %>
+    Status: <%= 'unavailable' %>
+    <%= button_to "Enable #{merchant.name}", "/merchants/#{merchant.id}?button=true", method: :patch %><br>
+  <% end %>
 <% end %>
+</div>
+
+
