@@ -212,6 +212,34 @@ RSpec.describe 'Admin Merchant Index' do
           expect(page).to have_content("Total Revenue: $125.00")
         end
       end
+
+      it 'displays a disable or enable button' do
+        merchant = Merchant.create!(name: 'Yeti', status: 'enabled')
+        merchant_2 = Merchant.create!(name: 'Hydroflask', status: 'enabled')
+        item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
+        item_4 = merchant_2.items.create!(name: 'Kettle', unit_price: 20, description: 'Tea')
+        visit '/admin/merchants'
+        within "#merchants-#{merchant.id}" do
+          expect(page).to have_button("Disable #{merchant.name}")
+          expect(page).to have_content("available")
+          click_button "Disable #{merchant.name}"
+          expect(current_path).to eq('/admin/merchants')
+          expect(page).to have_content("unavailable")
+          click_button "Enable #{merchant.name}"
+          save_and_open_page
+          expect(page).to have_content("available")
+        end
+
+        within "#merchants-#{merchant_2.id}" do
+          expect(page).to have_button("Disable #{merchant_2.name}")
+          expect(page).to have_content("available")
+          click_button "Disable #{merchant_2.name}"
+          expect(current_path).to eq('/admin/merchants')
+          expect(page).to have_content("unavailable")
+          click_button "Enable #{merchant_2.name}"
+          expect(page).to have_content("available")
+        end
+      end
     end
   end
 end

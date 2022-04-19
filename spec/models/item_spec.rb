@@ -37,4 +37,28 @@ RSpec.describe Item do
     it { should belong_to :merchant}
     it { should have_many(:invoices).through(:invoice_items)}
   end
+
+  context 'instance methods' do
+    it '.ordered-invoices should return invoices in order of created_at ascending' do
+      merchant = Merchant.create!(name: 'Brylan')
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
+
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson",
+                                   created_at: Time.parse('2012-03-27 14:54:09 UTC'),
+                                   updated_at: Time.parse('2012-03-27 14:54:09 UTC'))
+
+      invoice = customer.invoices.create!(status: "in progress",
+                                            created_at: Time.parse('2012-03-26 09:54:09 UTC'),
+                                            updated_at: Time.parse('2012-03-26 09:54:09 UTC'))
+
+      invoice2 = customer.invoices.create!(status: "in progress",
+                                            created_at: Time.parse('2012-03-25 09:54:09 UTC'),
+                                            updated_at: Time.parse('2012-03-25 09:54:09 UTC'))
+
+      invoice_item_1 = invoice.invoice_items.create!(item_id: item_1.id, quantity: 8, unit_price: 100, status: 'shipped')
+      invoice_item_2 = invoice2.invoice_items.create!(item_id: item_1.id, quantity: 5, unit_price: 500, status: 'packaged')
+
+      expect(item_1.ordered_invoices).to eq([invoice2, invoice])
+    end
+  end
 end
