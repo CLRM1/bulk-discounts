@@ -245,8 +245,18 @@ RSpec.describe 'Admin Merchant Index' do
         merchant_4 = Merchant.create!(name: 'Craig', status: 1)
 
         visit "/admin/merchants"
-        expect(page).to have_content("Enabled Merchants")
-        expect(page).to have_content("Disabled Merchants")
+        within "#merchant-enabled" do
+          expect(page).to have_content("Enabled Merchants")
+          expect(page).to have_content("Chris")
+          expect(page).to have_content("Craig")
+        end
+
+        within "#merchant-disabled" do
+          expect(page).to have_content("Disabled Merchants")
+          expect(page).to have_content("Antonio")
+          expect(page).to have_content("Brylan")
+        end
+
         expect(merchant_4.name).to appear_before(merchant_1.name)
         expect(merchant_3.name).to appear_before(merchant_2.name)
       end

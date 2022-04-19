@@ -12,21 +12,25 @@
 
 <h2>All Merchants:</h2>
 
-<h3>Enabled Merchants</h3>
-<% @merchants.each do |merchant| %>
-<div id="merchants-<%= merchant.id %>">
-  <% if merchant.status == 'enabled' %>
-    <h3>-<%= link_to "#{merchant.name}", "/admin/merchants/#{merchant.id}" %></h3>
-    Status: <%= 'available' %>
-    <%= button_to "Disable #{merchant.name}", "/merchants/#{merchant.id}?button=true", method: :patch %><br>
+<div id="merchant-enabled">
+  <h3>Enabled Merchants</h3>
+  <% @merchants.each do |merchant| %>
+  <div id="merchants-<%= merchant.id %>">
+    <% if merchant.status == 'enabled' %>
+      <h3>-<%= link_to "#{merchant.name}", "/admin/merchants/#{merchant.id}" %></h3>
+      Status: <%= 'available' %>
+      <%= button_to "Disable #{merchant.name}", "/merchants/#{merchant.id}?button=true", method: :patch %><br>
+    <% end %>
   <% end %>
-<% end %>
-<h3>Disabled Merchants</h3>
-<% @merchants.each do |merchant| %>
-  <% if merchant.status == 'disabled' %>
-    <h3>-<%= link_to "#{merchant.name}", "/admin/merchants/#{merchant.id}" %></h3>
-    Status: <%= 'unavailable' %>
-    <%= button_to "Enable #{merchant.name}", "/merchants/#{merchant.id}?button=true", method: :patch %><br>
+  <div id="merchant-disabled">
+  <h3>Disabled Merchants</h3>
+  <% @merchants.each do |merchant| %>
+    <% if merchant.status == 'disabled' %>
+      <h3>-<%= link_to "#{merchant.name}", "/admin/merchants/#{merchant.id}" %></h3>
+      Status: <%= 'unavailable' %>
+      <%= button_to "Enable #{merchant.name}", "/merchants/#{merchant.id}?button=true", method: :patch %><br>
+    <% end %>
   <% end %>
-<% end %>
+  </div>
+  </div>
 </div>
