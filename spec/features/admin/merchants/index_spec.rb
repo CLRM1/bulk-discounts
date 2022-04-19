@@ -4,13 +4,12 @@ require 'rails_helper'
 RSpec.describe 'Admin Merchant Index' do
   describe 'Admin Merchant Index Page' do
     it 'lists each merchant in the system' do
-      merchant_1 = Merchant.create!(name: 'Brylan')
-      merchant_2 = Merchant.create!(name: 'Antonio')
-      merchant_3 = Merchant.create!(name: 'Chris')
-      merchant_4 = Merchant.create!(name: 'Craig')
+      merchant_1 = Merchant.create!(name: 'Brylan', status: 1)
+      merchant_2 = Merchant.create!(name: 'Antonio', status: 1)
+      merchant_3 = Merchant.create!(name: 'Chris', status: 1)
+      merchant_4 = Merchant.create!(name: 'Craig', status: 1)
 
       visit "/admin/merchants"
-
       expect(page).to have_content('Brylan')
       expect(page).to have_content('Antonio')
       expect(page).to have_content('Chris')
@@ -19,9 +18,8 @@ RSpec.describe 'Admin Merchant Index' do
     end
 
     it 'has link to each merchant show page by clicking name' do
-      merchant_1 = Merchant.create!(name: 'Brylan')
+      merchant_1 = Merchant.create!(name: 'Brylan', status: 1)
       visit "/admin/merchants"
-
       click_link "Brylan"
       expect(current_path).to eq("/admin/merchants/#{merchant_1.id}")
     end
@@ -226,7 +224,6 @@ RSpec.describe 'Admin Merchant Index' do
           expect(current_path).to eq('/admin/merchants')
           expect(page).to have_content("unavailable")
           click_button "Enable #{merchant.name}"
-          save_and_open_page
           expect(page).to have_content("available")
         end
 
@@ -239,6 +236,29 @@ RSpec.describe 'Admin Merchant Index' do
           click_button "Enable #{merchant_2.name}"
           expect(page).to have_content("available")
         end
+      end
+
+      it "has sections for enabled/disbaled merchants" do
+        merchant_1 = Merchant.create!(name: 'Brylan', status: 0)
+        merchant_2 = Merchant.create!(name: 'Antonio', status: 0)
+        merchant_3 = Merchant.create!(name: 'Chris', status: 1)
+        merchant_4 = Merchant.create!(name: 'Craig', status: 1)
+
+        visit "/admin/merchants"
+        within "#merchant-enabled" do
+          expect(page).to have_content("Enabled Merchants")
+          expect(page).to have_content("Chris")
+          expect(page).to have_content("Craig")
+        end
+
+        within "#merchant-disabled" do
+          expect(page).to have_content("Disabled Merchants")
+          expect(page).to have_content("Antonio")
+          expect(page).to have_content("Brylan")
+        end
+
+        expect(merchant_4.name).to appear_before(merchant_1.name)
+        expect(merchant_3.name).to appear_before(merchant_2.name)
       end
     end
   end
