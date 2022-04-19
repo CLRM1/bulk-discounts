@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 2022_04_18_223818) do
     t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer "status"
+    t.integer "status", default: 1
   end
 
   create_table "transactions", force: :cascade do |t|
