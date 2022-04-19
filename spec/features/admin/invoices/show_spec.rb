@@ -30,5 +30,21 @@ RSpec.describe 'Admin Invoice Show' do
       expect(page).to have_content('cancelled')
 
     end
+
+    it 'displays the total revenue for the invoice' do
+      merchant = Merchant.create!(name: 'Brylan')
+      merchant_2 = Merchant.create!(name: 'Chris')
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 500, description: 'Soda')
+      item_3 = merchant_2.items.create!(name: 'Jar', unit_price: 400, description: 'Jelly')
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice_1 = customer.invoices.create(status: "in progress")
+      item_1.invoice_items.create!(invoice_id: invoice_1.id, quantity: 3, unit_price: 4, status: 2)
+      item_2.invoice_items.create!(invoice_id: invoice_1.id, quantity: 3, unit_price: 4, status: 2)
+      item_3.invoice_items.create!(invoice_id: invoice_1.id, quantity: 3, unit_price: 4, status: 2)
+
+      visit "/admin/invoices/#{invoice_1.id}"
+      expect(page).to have_content('Total Revenue: 33')
+    end
   end
 end
