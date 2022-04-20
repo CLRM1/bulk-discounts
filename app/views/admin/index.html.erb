@@ -11,3 +11,16 @@
       <p><%= link_to "#{invoice_item.invoice_id}", "admin/invoices/#{invoice_item.invoice_id}" %></p>
    <% end %>
 </div>
+
+<br>
+
+<div id="statistics">
+  <h3>Top 5 Customers: </h3>
+  <% if @merchant != nil %>
+    <% @merchant.top_five_customers.each do |customer| %>
+      <div id="customer-<%= customer.id %>">
+        <h4>Name: <%= customer.first_name %> <%= customer.last_name %></h4>
+        <p>Successful Transactions: <%= customer.successful_transactions.count %></p>
+      </div>
+    <% end %>
+  <% end %>
