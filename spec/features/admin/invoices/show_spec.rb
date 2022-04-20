@@ -68,6 +68,7 @@ RSpec.describe 'Admin Invoice Show' do
       expect(page).to have_content("Item Quantity: 9")
       expect(page).to have_content("Item Price: 10")
       expect(page).to have_content("Invoice Item Status: packaged")
+    end
 
     it 'displays the total revenue for the invoice' do
       visit "/admin/invoices/#{@invoice_1.id}"
@@ -75,4 +76,3 @@ RSpec.describe 'Admin Invoice Show' do
     end
   end
 end
-
