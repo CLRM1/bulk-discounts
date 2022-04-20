@@ -6,4 +6,11 @@ RSpec.describe 'the Github Info page' do
 
     expect(page).to have_content('B-gann21/little-esty-shop')
   end
+
+  it 'should have the # of commits' do
+    commit_count = GithubRepoService.new.total_commits
+    visit '/github_info'
+
+    expect(page).to have_content("Commits: #{commit_count}")
+  end
 end
