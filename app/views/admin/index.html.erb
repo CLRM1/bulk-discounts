@@ -8,8 +8,6 @@
 
 <div id="incomplete_invoices">
   <% @incomplete_invoices.each do |invoice_item| %>
-     <% if invoice_item.status != 'shipped' %>
       <p><%= link_to "#{invoice_item.invoice_id}", "admin/invoices/#{invoice_item.invoice_id}" %></p>
-     <% end %>
    <% end %>
 </div>
