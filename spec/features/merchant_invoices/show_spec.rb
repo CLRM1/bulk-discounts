@@ -72,9 +72,7 @@ RSpec.describe 'merchant invoice show page' do
     end
 
     it 'should have a link to the github info page' do
-      click_link('GitHub Repository info')
-
-      expect(current_path).to eq('/github_info')
+      expect(page).to have_link('GitHub Repository info')
     end
   end
 end

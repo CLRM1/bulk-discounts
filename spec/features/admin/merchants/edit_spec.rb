@@ -20,8 +20,7 @@ RSpec.describe 'Edit Merchant through Admin Merchant Show Page' do
       merchant_1 = Merchant.create!(name: 'Brylan')
       visit "/admin/merchants/#{merchant_1.id}/edit"
 
-      click_link('GitHub Repository info')
-      expect(current_path).to eq('/github_info')
+      expect(page).to have_link('GitHub Repository info')
     end
   end
 end

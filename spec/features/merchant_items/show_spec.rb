@@ -20,9 +20,7 @@ RSpec.describe 'merchant items show page' do
       item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
 
       visit "/merchants/#{merchant.id}/items/#{item_1.id}"
-      click_link('GitHub Repository info')
-
-      expect(current_path).to eq('/github_info')
+      expect(page).to have_link('GitHub Repository info')
     end
   end
 end

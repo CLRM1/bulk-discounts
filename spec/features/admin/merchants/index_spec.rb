@@ -26,9 +26,7 @@ RSpec.describe 'Admin Merchant Index' do
 
     it 'should have a link to the github info page' do
       visit "/admin/merchants"
-      click_link('GitHub Repository info')
-
-      expect(current_path).to eq('/github_info')
+      expect(page).to have_link('GitHub Repository info')
     end
 
     describe 'top_5_merchants' do
