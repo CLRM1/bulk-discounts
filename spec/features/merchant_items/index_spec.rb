@@ -121,5 +121,29 @@ RSpec.describe 'merchant items index page' do
       click_link "#{item_5.name}"
       expect(current_path).to eq("/merchants/#{merchant.id}/items/#{item_5.id}")
     end
+
+    it 'Next to each of the top 5 items I see the date with the most sales for each item with the label Top selling date for was' do
+      merchant = Merchant.create!(name: 'Brylan')
+
+      customer_1 = Customer.create!(first_name: 'Joey', last_name: 'Ondricka')
+      invoice_1 = customer_1.invoices.create!(status: 'completed',
+                                   created_at: Time.parse('2012-03-27 14:54:09 UTC'),
+                                   updated_at: Time.parse('2012-03-27 14:54:09 UTC'))
+      item_1 = merchant.items.create!(name: 'Pencil', unit_price: 1, description: 'Writes things.')
+      item_1.invoice_items.create!(invoice_id: invoice_1.id, quantity: 4, unit_price: 4, status: 2)
+      invoice_1.transactions.create!(credit_card_number: '4654405418249632', result: 'success')
+
+      customer_2 = Customer.create!(first_name: 'Osinski', last_name: 'Cecelia')
+      invoice_2 = customer_2.invoices.create!(status: 'completed',
+                                            created_at: Time.parse('2012-03-26 09:54:09 UTC'),
+                                            updated_at: Time.parse('2012-03-26 09:54:09 UTC'))
+      item_1.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 4, status: 2)
+      invoice_2.transactions.create!(credit_card_number: '5654405418249632', result: 'success')
+
+      visit "/merchants/#{merchant.id}/items"
+      within "#top_merchant_items-#{merchant.id}" do
+        expect(page).to have_content("Top selling date for was: #{invoice_2.updated_at.strftime("%A, %B %d, %Y")}")
+      end
+    end
   end
 end
