@@ -43,6 +43,7 @@ group :development, :test do
   gem 'shoulda-matchers'
   gem 'launchy'
   gem 'orderly'
+  gem 'httparty'
   gem 'pry'
   gem 'rspec-rails', '~> 4.0.1'
 end
