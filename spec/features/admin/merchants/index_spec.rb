@@ -267,6 +267,14 @@ RSpec.describe 'Admin Merchant Index' do
         expect(merchant_4.name).to appear_before(merchant_1.name)
         expect(merchant_3.name).to appear_before(merchant_2.name)
       end
+
+      it 'I see a link to create a new merchant' do
+
+        visit "/admin/merchants"
+        expect(page).to have_link("Create a New Merchant")
+        click_link "Create a New Merchant"
+        expect(current_path).to eq("/admin/merchants/new")
+      end
     end
   end
 end

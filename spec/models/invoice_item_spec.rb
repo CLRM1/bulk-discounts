@@ -19,8 +19,18 @@ RSpec.describe InvoiceItem do
                               created_at: Time.parse('2012-03-27 14:53:59 UTC'),
                               updated_at: Time.parse('2012-03-27 14:53:59 UTC'))
 
+    @item_2 = @merchant.items.create!(name: 'Chocolate Delight', unit_price: 500,
+                             description: 'tastiest chocolate pudding on the east coast',
+                              created_at: Time.parse('2012-03-27 14:53:59 UTC'),
+                              updated_at: Time.parse('2012-03-27 14:53:59 UTC'))
+
     @invoice_item = InvoiceItem.create!(invoice_id: @invoice.id, item_id: @item.id,
                                             status: 'packaged', quantity: 9, unit_price: 13232,
+                                        created_at: Time.parse('2012-03-27 14:54:09 UTC'),
+                                        updated_at: Time.parse('2012-03-27 14:54:09 UTC'))
+
+    @invoice_item_2 = InvoiceItem.create!(invoice_id: @invoice.id, item_id: @item_2.id,
+                                            status: 'shipped', quantity: 9, unit_price: 0,
                                         created_at: Time.parse('2012-03-27 14:54:09 UTC'),
                                         updated_at: Time.parse('2012-03-27 14:54:09 UTC'))
   end
@@ -50,6 +60,10 @@ RSpec.describe InvoiceItem do
   describe 'class methods' do
     it 'can calculate the items total revenue' do
       expect(InvoiceItem.items_total_revenue).to eq(119088)
+    end
+
+    it 'can return invoices with items that have not shipped' do
+      expect(InvoiceItem.incomplete_invoices.count).to eq(1)
     end
   end
 end
