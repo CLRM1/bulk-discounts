@@ -80,6 +80,11 @@ RSpec.describe 'Admin Dashboard' do
       expect(current_path).to eq('/admin/invoices')
     end
 
+    it 'should have a link to the github info page' do
+      visit "/admin"
+      expect(page).to have_link('GitHub Repository info')
+    end
+
     it 'I see an "incomplete Invoices" section that lists ids of invoices with items that have not shipped yet' do
       merchant = Merchant.create!(name: 'Chris')
       item_1 = merchant.items.create!(name: 'Pencil', unit_price: 500, description: 'Writes things.')

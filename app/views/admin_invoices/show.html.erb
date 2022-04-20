@@ -20,5 +20,6 @@ Item Price: <%= invoice_item.item.unit_price %><br>
 Invoice Item Status: <%= invoice_item.status %><br>
 <% end %>
 
-<h2>Total Revenue: $<%= @invoice.total_revenue.to_s.insert(-3,".") %></h2>
-
+<% if @invoice.total_revenue != 0 %>
+  <h2>Total Revenue: $<%= @invoice.total_revenue.to_s.insert(-3,".") %></h2>
+<% end %>

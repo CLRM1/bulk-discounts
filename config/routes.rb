@@ -26,4 +26,6 @@ Rails.application.routes.draw do
   patch '/admin/invoices/:id', to: 'admin_invoices#update'
 
   get '/admin', to: 'admin#index'
+
+  get '/github_info', to: 'github_info#show'
 end
