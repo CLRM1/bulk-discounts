@@ -7,6 +7,10 @@ class GithubRepoFacade
     service.total_commits
   end
 
+  def pull_requests
+    service.total_pr
+  end
+
   def usernames
     service.get_usernames
   end
