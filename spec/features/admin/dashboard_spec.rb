@@ -69,11 +69,11 @@ RSpec.describe 'Admin Dashboard' do
       invoice_3 = customer_1.invoices.create!(status: 'completed', created_at: Time.parse("2012-03-26 14:54:09 UTC"))
       invoice_4 = customer_1.invoices.create!(status: 'completed', created_at: Time.parse("2012-03-24 14:54:09 UTC"))
       invoice_5 = customer_1.invoices.create!(status: 'completed', created_at: Time.parse("2012-03-28 14:54:09 UTC"))
-      item_1.invoice_items.create!(invoice_id: invoice_1.id, quantity: 3, unit_price: 400, status: 'packaged')
-      item_2.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 400, status: 'pending')
-      item_3.invoice_items.create!(invoice_id: invoice_3.id, quantity: 5, unit_price: 400, status: 'packaged')
-      item_4.invoice_items.create!(invoice_id: invoice_4.id, quantity: 5, unit_price: 400, status: 'packaged')
-      item_5.invoice_items.create!(invoice_id: invoice_5.id, quantity: 5, unit_price: 400, status: 'shipped')
+      item_1.invoice_items.create!(invoice_id: invoice_1.id, quantity: 3, unit_price: 400, status: 'packaged', created_at: Time.parse("2012-03-27 14:54:09 UTC"))
+      item_2.invoice_items.create!(invoice_id: invoice_2.id, quantity: 5, unit_price: 400, status: 'pending', created_at: Time.parse("2012-03-22 14:54:09 UTC"))
+      item_3.invoice_items.create!(invoice_id: invoice_3.id, quantity: 5, unit_price: 400, status: 'packaged', created_at: Time.parse("2012-03-26 14:54:09 UTC"))
+      item_4.invoice_items.create!(invoice_id: invoice_4.id, quantity: 5, unit_price: 400, status: 'packaged', created_at: Time.parse("2012-03-24 14:54:09 UTC"))
+      item_5.invoice_items.create!(invoice_id: invoice_5.id, quantity: 5, unit_price: 400, status: 'shipped', created_at: Time.parse("2012-03-28 14:54:09 UTC"))
 
       invoice_1_date = invoice_1.created_at.strftime("%A, %B %d, %Y")
       invoice_2_date = invoice_2.created_at.strftime("%A, %B %d, %Y")
@@ -83,11 +83,11 @@ RSpec.describe 'Admin Dashboard' do
 
       visit '/admin'
 
-      within '#incomplete-invoices' do
+      within '#incomplete_invoices' do
         expect(invoice_2_date).to appear_before(invoice_4_date)
         expect(invoice_4_date).to appear_before(invoice_3_date)
         expect(invoice_3_date).to appear_before(invoice_1_date)
-        expect(invoice_1_date).to appear_before(invoice_5_date)
+        expect(page).to_not have_content(invoice_5_date)
       end
     end
   end
