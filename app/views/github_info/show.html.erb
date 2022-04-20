@@ -4,10 +4,10 @@
 <p>Commits: <%= @commits %></p>
 <p>Usernames:
   <% @usernames.each do |user| %>
-    <% if user[:login] != "BrianZanti" ||
-          user[:login] != "timomitchel" ||
-          user[:login] != "scottalexandra" ||
-          user[:login] != "jamisonordway"%>
+    <% if (user[:login] != "BrianZanti" &&
+           user[:login] != "timomitchel" &&
+           user[:login] != "scottalexandra" &&
+           user[:login] != "jamisonordway") %>
     <p> <%= user[:login] %></p>
     <% end %>
   <% end %>
