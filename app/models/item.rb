@@ -10,4 +10,14 @@ class Item < ApplicationRecord
   def ordered_invoices
     invoices.order(created_at: :asc)
   end
+
+  def date_with_most_sales
+      invoices.joins(:transactions)
+              .where(transactions: {result: 'success'})
+              .group(:id)
+              .select("invoices.*, sum(invoice_items.quantity) as quantity")
+              .order(quantity: :desc)
+              .limit(1)
+              .first.updated_at
+  end
 end
