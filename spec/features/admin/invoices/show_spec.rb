@@ -15,7 +15,6 @@ RSpec.describe 'Admin Invoice Show' do
       expect(page).to have_content("#{invoice_1.status}")
       expect(page).to have_content("#{invoice_1.created_at.strftime("%A, %B %d, %Y")}")
       expect(page).to have_content("Billy Jonson")
-
     end
 
     it 'lists a link to update Invoice status using a select field' do
@@ -28,7 +27,16 @@ RSpec.describe 'Admin Invoice Show' do
       click_button 'Change Status'
       expect(current_path).to eq("/admin/invoices/#{invoice_1.id}")
       expect(page).to have_content('cancelled')
+    end
 
+    it 'has a link to the github info page' do
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice_1 = customer.invoices.create(status: "in progress")
+
+      visit "/admin/invoices/#{invoice_1.id}"
+      click_link('GitHub Repository info')
+
+      expect(current_path).to eq('/github_info')
     end
   end
 end

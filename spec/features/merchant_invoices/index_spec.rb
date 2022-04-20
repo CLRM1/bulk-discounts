@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe 'merchant invoices index page' do
-
   before(:each) do
     @merchant = Merchant.create!(name: 'Brylan')
     @item_1 = @merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
@@ -61,5 +60,11 @@ RSpec.describe 'merchant invoices index page' do
       click_link "#{@invoice_4.id}"
     end
     expect(current_path).to eq("/merchants/#{@merchant.id}/invoices/#{@invoice_4.id}")
+  end
+
+  it 'should have a link to the github info page' do
+    click_link('GitHub Repository info')
+
+    expect(current_path).to eq('/github_info')
   end
 end

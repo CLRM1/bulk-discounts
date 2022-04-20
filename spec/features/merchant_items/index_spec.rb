@@ -121,5 +121,14 @@ RSpec.describe 'merchant items index page' do
       click_link "#{item_5.name}"
       expect(current_path).to eq("/merchants/#{merchant.id}/items/#{item_5.id}")
     end
+
+    it 'should have a link to the github info page' do
+      merchant = Merchant.create!(name: 'Brylan')
+
+      visit "/merchants/#{merchant.id}/items"
+      click_link('GitHub Repository info')
+
+      expect(current_path).to eq('/github_info')
+    end
   end
 end

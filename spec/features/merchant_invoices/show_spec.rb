@@ -58,7 +58,7 @@ RSpec.describe 'merchant invoice show page' do
       within "#item-#{@item_1.id}" do
         expect(page).to have_content("Status: shipped")
       end
-      
+
       within "#item-#{@item_1.id}" do
         select 'packaged', from: 'select_status'
         click_button "Update Item Status"
@@ -69,6 +69,12 @@ RSpec.describe 'merchant invoice show page' do
       within "#item-#{@item_1.id}" do
         expect(page).to have_content("Status: packaged")
       end
+    end
+
+    it 'should have a link to the github info page' do
+      click_link('GitHub Repository info')
+
+      expect(current_path).to eq('/github_info')
     end
   end
 end

@@ -163,5 +163,11 @@ RSpec.describe 'merchant dashboard' do
         expect("#{@invoice_5.id}").to appear_before("#{@invoice_6.id}")
       end
     end
+
+    it 'should have a link to the github info page' do
+      click_link('GitHub Repository info')
+
+      expect(current_path).to eq('/github_info')
+    end
   end
 end

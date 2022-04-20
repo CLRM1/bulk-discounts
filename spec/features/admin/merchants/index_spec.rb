@@ -24,6 +24,13 @@ RSpec.describe 'Admin Merchant Index' do
       expect(current_path).to eq("/admin/merchants/#{merchant_1.id}")
     end
 
+    it 'should have a link to the github info page' do
+      visit "/admin/merchants"
+      click_link('GitHub Repository info')
+
+      expect(current_path).to eq('/github_info')
+    end
+
     describe 'top_5_merchants' do
       it 'has a top_5_merchants section' do
         #for simplicity, this customer will be creating all of the invoices.

@@ -20,5 +20,12 @@ RSpec.describe 'Admin Dashboard' do
       click_link 'Admin Invoices Index'
       expect(current_path).to eq('/admin/invoices')
     end
+
+    it 'should have a link to the github info page' do
+      visit "/admin"
+      click_link('GitHub Repository info')
+
+      expect(current_path).to eq('/github_info')
+    end
   end
 end
