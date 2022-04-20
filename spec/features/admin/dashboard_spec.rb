@@ -21,14 +21,8 @@ RSpec.describe 'Admin Dashboard' do
       expect(current_path).to eq('/admin/invoices')
     end
 
-#     As an admin,
-# When I visit the admin dashboard
-# Then I see a section for "Incomplete Invoices"
-# In that section I see a list of the ids of all invoices
-# That have items that have not yet been shipped
-# And each invoice id links to that invoice's admin show page
     it 'I see an "incomplete Invoices" section that lists ids of invoices with items that have not shipped yet' do
-      merchant = Merchant.create!(name: 'Brylan')
+      merchant = Merchant.create!(name: 'Chris')
       item_1 = merchant.items.create!(name: 'Pencil', unit_price: 500, description: 'Writes things.')
       item_2 = merchant.items.create!(name: 'Pen', unit_price: 400, description: 'Writes things, but dark.')
       item_3 = merchant.items.create!(name: 'Marker', unit_price: 400, description: 'Writes things, but dark, and thicc.')
@@ -51,11 +45,13 @@ RSpec.describe 'Admin Dashboard' do
       expect(page).to have_content("Incomplete Invoices")
 
       within '#incomplete_invoices' do
-        expect(page).to have_content(invoice_1.id)
-        expect(page).to have_content(invoice_2.id)
-        expect(page).to have_content(invoice_3.id)
-        expect(page).to have_content(invoice_4.id)
-        expect(page).to_not have_content(invoice_5.id)
+        expect(page).to have_link("#{invoice_1.id}")
+        expect(page).to have_link("#{invoice_2.id}")
+        expect(page).to have_link("#{invoice_3.id}")
+        expect(page).to have_link("#{invoice_4.id}")
+        expect(page).to_not have_link("#{invoice_5.id}")
+        click_link "#{invoice_1.id}"
+        expect(current_path).to eq("/admin/invoices/#{invoice_1.id}")
       end
     end
   end
