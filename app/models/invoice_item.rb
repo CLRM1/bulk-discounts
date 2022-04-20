@@ -16,5 +16,7 @@ class InvoiceItem < ApplicationRecord
 
   def self.incomplete_invoices
     InvoiceItem.where.not(status: 'shipped')
+               .distinct
+               .order("created_at")
   end
 end
