@@ -113,15 +113,8 @@ RSpec.describe 'Admin Dashboard' do
         expect(current_path).to eq("/admin/invoices/#{invoice_1.id}")
       end
     end
-    # As an admin,
-    # When I visit the admin dashboard
-    # Then I see the names of the top 5 customers
-    # who have conducted the largest number of successful transactions
-    # And next to each customer name I see the number of successful transactions they have
-    # conducted with my merchant
 
     it 'I see the names of the top 5 customers who have the most successful transactions and displays the number of successful transactions they have conducted' do
-
       within '#statistics' do
         expect("Joey Ondricka").to appear_before("Osinski Cecelia")
         expect("Osinski Cecelia").to appear_before("Toy Mariah")
