@@ -8,7 +8,7 @@ class GithubRepoFacade
   end
 
   def usernames
-    GithubRepo.new(service.get_usernames)
+    service.get_usernames
   end
 
   def service

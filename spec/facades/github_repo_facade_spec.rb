@@ -4,7 +4,7 @@ RSpec.describe GithubRepoFacade do
  context 'instance methods' do
     it '.repo can create a GitHubRepo' do
       facade = GithubRepoFacade.new
-      repo = facade.repo
+      repo = facade.repo_name
 
       expect(repo).to be_a(GithubRepo)
     end

@@ -3,9 +3,5 @@ class GithubRepo
 
   def initialize(data)
     @name = data[:full_name]
-    @contributors = data.map do |k, v|
-      require "pry"; binding.pry
-      k[:login]
-    end
   end
 end
