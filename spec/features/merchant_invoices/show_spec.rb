@@ -71,8 +71,8 @@ RSpec.describe 'merchant invoice show page' do
       end
     end
 
-    it 'should have a link to the github info page' do
-      expect(page).to have_link('GitHub Repository info')
-    end
+    # it 'should have a link to the github info page' do
+    #   expect(page).to have_link('GitHub Repository info')
+    # end
   end
 end

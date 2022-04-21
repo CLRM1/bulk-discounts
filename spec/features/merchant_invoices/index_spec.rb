@@ -62,7 +62,7 @@ RSpec.describe 'merchant invoices index page' do
     expect(current_path).to eq("/merchants/#{@merchant.id}/invoices/#{@invoice_4.id}")
   end
 
-  it 'should have a link to the github info page' do
-    expect(page).to have_link('GitHub Repository info')
-  end
+  # it 'should have a link to the github info page' do
+  #   expect(page).to have_link('GitHub Repository info')
+  # end
 end

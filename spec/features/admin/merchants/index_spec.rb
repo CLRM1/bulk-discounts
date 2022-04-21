@@ -24,10 +24,10 @@ RSpec.describe 'Admin Merchant Index' do
       expect(current_path).to eq("/admin/merchants/#{merchant_1.id}")
     end
 
-    it 'should have a link to the github info page' do
-      visit "/admin/merchants"
-      expect(page).to have_link('GitHub Repository info')
-    end
+    # it 'should have a link to the github info page' do
+    #   visit "/admin/merchants"
+    #   expect(page).to have_link('GitHub Repository info')
+    # end
 
     describe 'top_5_merchants' do
       it 'has a top_5_merchants section' do
