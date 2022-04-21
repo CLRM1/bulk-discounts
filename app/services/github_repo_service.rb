@@ -10,6 +10,11 @@ class GithubRepoService
     page_1.count + page_2.count + page_3.count
   end
 
+  def total_pr
+    pull_requests = get_url("https://api.github.com/repos/B-gann21/little-esty-shop/pulls?state=all&per_page=100")
+    pull_requests.count
+  end
+
   def get_usernames
     get_url("https://api.github.com/repos/B-gann21/little-esty-shop/contributors")
   end
