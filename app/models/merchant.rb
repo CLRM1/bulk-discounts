@@ -5,9 +5,10 @@ class Merchant < ApplicationRecord
   has_many :invoices, through: :invoice_items
   has_many :transactions, through: :invoices
   has_many :customers, through: :invoices
+  has_many :bulk_discounts
   enum status: ["disabled", "enabled"]
 
-  def top_five_customers    
+  def top_five_customers
     customers.select("customers.*, count(transactions) as transaction_count")
              .joins(invoices: :transactions)
              .where(transactions: {result: 'success'})
