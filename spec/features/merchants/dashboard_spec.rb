@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe 'merchant dashboard' do
 
   before(:each) do
-    @merchant = Merchant.create!(name: 'Brylan')
+    @merchant = Merchant.create!(name: 'Chris')
+    @merchant_2 = Merchant.create!(name: 'Sophie')
     @item_1 = @merchant.items.create!(name: 'Pencil', unit_price: 500, description: 'Writes things.')
     @item_2 = @merchant.items.create!(name: 'Pen', unit_price: 400, description: 'Writes things, but dark.')
     @item_3 = @merchant.items.create!(name: 'Marker', unit_price: 400, description: 'Writes things, but dark, and thicc.')
@@ -66,7 +67,7 @@ RSpec.describe 'merchant dashboard' do
   end
 
   it 'displays the name of the merchant' do
-    expect(page).to have_content('Brylan')
+    expect(page).to have_content('Chris')
   end
 
   context 'links' do
@@ -164,8 +165,48 @@ RSpec.describe 'merchant dashboard' do
       end
     end
 
-    # it 'should have a link to the github info page' do
-    #   expect(page).to have_link('GitHub Repository info')
-    # end
+#     Merchant Bulk Discounts Index
+#
+# As a merchant
+# When I visit my merchant dashboard
+# Then I see a link to view all my discounts
+# When I click this link
+# Then I am taken to my bulk discounts index page
+# Where I see all of my bulk discounts including their
+# percentage discount and quantity thresholds
+# And each bulk discount listed includes a link to its show page
+    it 'displays a link to view the merchants discounts' do
+      discount_1 = BulkDiscounts.create(percentage_discount: 50, quantity_threshold: 3)
+      discount_2 = BulkDiscounts.create(percentage_discount: 50, quantity_threshold: 3)
+      discount_3 = BulkDiscounts.create(percentage_discount: 50, quantity_threshold: 3)
+      click_link 'View All Discounts'
+      expect(current_path).to eq("/merchants/#{merchant.id}/bulk_discounts")
+
+      within "#discounts" do
+        expect(page).to have_content(discount_1.percentage_discount)
+        expect(page).to have_content(discount_1.quantity_threshold)
+        click_link discount_1.id
+        expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount_1.id}")
+      end
+
+      visit "/merchants/#{merchant.id}/bulk_discounts"
+
+      within "#discounts" do
+        expect(page).to have_content(discount_2.percentage_discount)
+        expect(page).to have_content(discount_2.quantity_threshold)
+        click_link discount_2.id
+        expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount_2.id}")
+      end
+
+      visit "/merchants/#{merchant.id}/bulk_discounts"
+
+      within "#discounts" do
+        expect(page).to have_content(discount_3.percentage_discount)
+        expect(page).to have_content(discount_3.quantity_threshold)
+        click_link discount_3.id
+        expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount_3.id}")
+      end
+
+    end
   end
 end
