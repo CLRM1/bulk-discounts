@@ -62,141 +62,25 @@ RSpec.describe 'merchant dashboard' do
     @item_1.invoice_items.create!(invoice_id: @invoice_6.id, quantity: 3, unit_price: 400, status: 'packaged',
                                                                                        created_at: Time.parse("2012-04-03 14:54:09 UTC"))
     @invoice_6.transactions.create!(credit_card_number: '6654405418249632', result: 'success')
-
-    visit "/merchants/#{@merchant.id}/dashboard"
   end
 
-  it 'displays the name of the merchant' do
-    expect(page).to have_content('Chris')
-  end
-
-  context 'links' do
-    it 'displays links to the merchant items index' do
-      click_link "Merchant's Items"
-      expect(current_path).to eq("/merchants/#{@merchant.id}/items")
-    end
-
-    it 'displays links to the merchant invoices index' do
-      click_link "Merchant's Invoices"
-      expect(current_path).to eq("/merchants/#{@merchant.id}/invoices")
-    end
-  end
-
-  context 'dashboard statistics' do
-    it 'displays the top 5 customers based on transactions' do
-      within '#statistics' do
-        expect("Joey Ondricka").to appear_before("Osinski Cecelia")
-        expect("Osinski Cecelia").to appear_before("Toy Mariah")
-        expect("Toy Mariah").to appear_before("Joy Braun")
-        expect("Joy Braun").to appear_before("Mark Brains")
-        expect("Mark Brains").to_not appear_before("Joy Braun")
-      end
-    end
-
-    it 'displays the number of successful transactions next to each customer' do
-      within "#customer-#{@customer_1.id}" do
-        expect(page).to have_content('Successful Transactions: 6')
-      end
-
-      within "#customer-#{@customer_2.id}" do
-        expect(page).to have_content('Successful Transactions: 5')
-      end
-
-      within "#customer-#{@customer_3.id}" do
-        expect(page).to have_content('Successful Transactions: 4')
-      end
-
-      within "#customer-#{@customer_4.id}" do
-        expect(page).to have_content('Successful Transactions: 3')
-      end
-
-      within "#customer-#{@customer_5.id}" do
-        expect(page).to have_content('Successful Transactions: 2')
-      end
-    end
-
-
-    it 'displays the names of all items that are ready to ship' do
-      within '#items-ready-to-ship' do
-        expect(page).to have_content("Pencil")
-        expect(page).to have_content("Pen")
-        expect(page).to_not have_content("Marker")
-      end
-    end
-
-    it 'each item has its invoice id as link to its invoice show page' do
-      within "#item-#{@item_1.id}" do
-        click_link "#{@invoice_1.id}"
-      end
-      expect(current_path).to eq("/merchants/#{@merchant.id}/invoices/#{@invoice_1.id}")
-
-      visit "/merchants/#{@merchant.id}/dashboard"
-
-      within "#item-#{@item_1.id}" do
-        expect(page).to have_link("#{@invoice_2.id}")
-        expect(page).to have_link("#{@invoice_3.id}")
-        expect(page).to have_link("#{@invoice_4.id}")
-        expect(page).to have_link("#{@invoice_5.id}")
-        expect(page).to have_link("#{@invoice_6.id}")
-        expect(page).to_not have_link("#{@invoice_7.id}")
-      end
-
-      within "#item-#{@item_2.id}" do
-        click_link "#{@invoice_7.id}"
-      end
-      expect(current_path).to eq("/merchants/#{@merchant.id}/invoices/#{@invoice_7.id}")
-    end
-
-    it 'invoices have formatted date of creation and are ordered from oldest to newest' do
-      within "#item-#{@item_1.id}" do
-        expect(page).to have_content("Tuesday, March 27, 2012")
-        expect(page).to have_content("Thursday, March 29, 2012")
-        expect(page).to have_content("Friday, March 30, 2012")
-        expect(page).to have_content("Sunday, April 01, 2012")
-        expect(page).to_not have_content("Wednesday, March 28, 2012")
-      end
-
-      within "#item-#{@item_1.id}" do
-        expect("#{@invoice_1.id}").to appear_before("#{@invoice_2.id}")
-        expect("#{@invoice_2.id}").to appear_before("#{@invoice_3.id}")
-        expect("#{@invoice_3.id}").to appear_before("#{@invoice_4.id}")
-        expect("#{@invoice_4.id}").to appear_before("#{@invoice_5.id}")
-        expect("#{@invoice_5.id}").to appear_before("#{@invoice_6.id}")
-      end
-    end
-
-    it 'displays a link to view the merchants discounts' do
-      discount_1 = @merchant.bulk_discounts.create(percentage_discount: 50, quantity_threshold: 3)
-      discount_2 = @merchant.bulk_discounts.create(percentage_discount: 50, quantity_threshold: 3)
-      discount_3 = @merchant.bulk_discounts.create(percentage_discount: 50, quantity_threshold: 3)
-      click_link 'View All Discounts'
+# Merchant Bulk Discount Create
+#
+# As a merchant
+# When I visit my bulk discounts index
+# Then I see a link to create a new discount
+# When I click this link
+# Then I am taken to a new page where I see a form to add a new bulk discount
+# When I fill in the form with valid data
+# Then I am redirected back to the bulk discount index
+# And I see my new bulk discount listed
+    it 'allows the user to create a new discount' do
+      visit "/merchants/#{@merchant.id}/bulk_discounts"
+      click_link "Create New Discount"
+      expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/new")
+      fill_in 'percentage_discount', with: 20
+      fill_in 'quantity_threshold', with: 10
+      click_button 'Submit'
       expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts")
-
-      within "#discounts" do
-        expect(page).to have_content(discount_1.percentage_discount)
-        expect(page).to have_content(discount_1.quantity_threshold)
-        click_link "#{discount_1.id}"
-        expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount_1.id}")
-      end
-
-      visit "/merchants/#{@merchant.id}/bulk_discounts"
-
-      within "#discounts" do
-        expect(page).to have_content(discount_2.percentage_discount)
-        expect(page).to have_content(discount_2.quantity_threshold)
-        click_link "#{discount_2.id}"
-        expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount_2.id}")
-      end
-
-      visit "/merchants/#{@merchant.id}/bulk_discounts"
-
-      within "#discounts" do
-        expect(page).to have_content(discount_3.percentage_discount)
-        expect(page).to have_content(discount_3.quantity_threshold)
-        click_link "#{discount_3.id}"
-        expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount_3.id}")
-      end
-
     end
-  end
 end
