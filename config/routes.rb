@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   get "/merchants/:id/bulk_discounts", to: "merchant_discounts#index"
+  get "/merchants/:id/bulk_discounts/new", to: "merchant_discounts#new"
+  post "/merchants/:id/bulk_discounts", to: "merchant_discounts#create"
   get "/merchants/:id/bulk_discounts/:id", to: "merchant_discounts#show"
   get "/merchants/:id/items", to: "merchant_items#index"
   get "/merchants/:id/items/new", to: "merchant_items#new"
