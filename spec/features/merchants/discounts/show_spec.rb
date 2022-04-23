@@ -40,4 +40,20 @@ RSpec.describe 'bulk discount show' do
     expect(page).to have_content(22)
     expect(page).to have_content(2)
   end
+
+  it 'requires all fields to be entered when editing the discount' do
+    discount_1 = @merchant.bulk_discounts.create(percentage_discount: 10, quantity_threshold: 20)
+    discount_2 = @merchant.bulk_discounts.create(percentage_discount: 25, quantity_threshold: 15)
+    visit "/merchants/#{@merchant.id}/bulk_discounts/#{discount_1.id}"
+
+    click_link "Edit"
+    expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount_1.id}/edit")
+    expect(find_field('percentage_discount').value).to eq("10")
+    expect(find_field('quantity_threshold').value).to eq("20")
+    fill_in 'quantity_threshold', with: 2
+    fill_in 'quantity_threshold', with: nil
+    click_button 'Submit'
+
+    expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount_1.id}/edit")
+  end
 end

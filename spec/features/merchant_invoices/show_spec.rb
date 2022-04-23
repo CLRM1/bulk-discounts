@@ -71,8 +71,24 @@ RSpec.describe 'merchant invoice show page' do
       end
     end
 
-    # it 'should have a link to the github info page' do
-    #   expect(page).to have_link('GitHub Repository info')
-    # end
+    # Merchant Invoice Show Page: Total Revenue and Discounted Revenue
+#
+    # As a merchant
+    # When I visit my merchant invoice show page
+    # Then I see the total revenue for my merchant from this invoice (not including discounts)
+    # And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
+    it 'displays the total discounted revenue for the merchant from the invoice ' do
+      item_1 = @merchant.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
+      item_2 = @merchant.items.create!(name: 'Can', unit_price: 500, description: 'Soda')
+      item_3 = @merchant.items.create!(name: 'Jar', unit_price: 400, description: 'Jelly')
+
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice_1 = customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      invoice_1.invoice_items.create!(item_id: item_1.id, status: "shipped", quantity: 8, unit_price: 100)
+      invoice_1.invoice_items.create!(item_id: item_2.id, status: "packaged", quantity: 5, unit_price: 500)
+      discount_1 = @merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
+      expect(page).to have_content("Total Revenue: $33.00")
+      # expect(page).to have_content("Total Discounted Revenue: $")
+    end
   end
 end
