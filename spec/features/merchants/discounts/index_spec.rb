@@ -64,23 +64,30 @@ RSpec.describe 'merchant dashboard' do
     @invoice_6.transactions.create!(credit_card_number: '6654405418249632', result: 'success')
   end
 
-# Merchant Bulk Discount Create
-#
-# As a merchant
-# When I visit my bulk discounts index
-# Then I see a link to create a new discount
-# When I click this link
-# Then I am taken to a new page where I see a form to add a new bulk discount
-# When I fill in the form with valid data
-# Then I am redirected back to the bulk discount index
-# And I see my new bulk discount listed
-    it 'allows the user to create a new discount' do
-      visit "/merchants/#{@merchant.id}/bulk_discounts"
-      click_link "Create New Discount"
-      expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/new")
-      fill_in 'percentage_discount', with: 20
-      fill_in 'quantity_threshold', with: 10
-      click_button 'Submit'
-      expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts")
-    end
+  it 'allows the user to create a new discount' do
+    visit "/merchants/#{@merchant.id}/bulk_discounts"
+    click_link "Create New Discount"
+    expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/new")
+    fill_in 'percentage_discount', with: 20
+    fill_in 'quantity_threshold', with: 10
+    click_button 'Submit'
+    expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts")
+  end
+
+  # Merchant Bulk Discount Delete
+  #
+  # As a merchant
+  # When I visit my bulk discounts index
+  # Then next to each bulk discount I see a link to delete it
+  # When I click this link
+  # Then I am redirected back to the bulk discounts index page
+  # And I no longer see the discount listed
+  it 'allows the user to delete a discount' do
+    discount_1 = @merchant.bulk_discounts.create(percentage_discount: 10, quantity_threshold: 20)
+    visit "/merchants/#{@merchant.id}/bulk_discounts"
+    expect(page).to have_content(discount_1.id)
+    click_link 'Delete'
+    expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts")
+    expect(page).to_not have_content(discount_1.id)
+  end
 end
