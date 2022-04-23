@@ -4,12 +4,15 @@ Rails.application.routes.draw do
   get "/merchants/:id/bulk_discounts/new", to: "merchant_discounts#new"
   post "/merchants/:id/bulk_discounts", to: "merchant_discounts#create"
   get "/merchants/:id/bulk_discounts/:id", to: "merchant_discounts#show"
+  delete "/merchants/:id/bulk_discounts/:id", to: "merchant_discounts#destroy"
+
   get "/merchants/:id/items", to: "merchant_items#index"
   get "/merchants/:id/items/new", to: "merchant_items#new"
   post "/merchants/:id/items", to: "merchant_items#create"
   get "/merchants/:id/items/:id", to: "merchant_items#show"
   get "/merchants/:id/items/:id/edit", to: "merchant_items#edit"
   patch "/merchants/:id/items/:id", to: "merchant_items#update"
+
   patch "/items/:id", to: 'items#update'
 
   get 'merchants/:id/dashboard', to: 'merchants#show'
