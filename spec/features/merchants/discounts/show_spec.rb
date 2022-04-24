@@ -15,10 +15,11 @@ RSpec.describe 'bulk discount show' do
     expect(page).to have_content(discount_1.id)
     expect(page).to have_content(discount_1.percentage_discount)
     expect(page).to have_content(discount_1.quantity_threshold)
-
-    expect(page).to_not have_content(discount_2.id)
-    expect(page).to_not have_content(discount_2.percentage_discount)
-    expect(page).to_not have_content(discount_2.quantity_threshold)
+    within "#details" do
+      expect(page).to_not have_content(discount_2.id)
+      expect(page).to_not have_content(discount_2.percentage_discount)
+      expect(page).to_not have_content(discount_2.quantity_threshold)
+    end
   end
 
   it 'allows the user to edit the discount' do
@@ -35,10 +36,12 @@ RSpec.describe 'bulk discount show' do
     click_button 'Submit'
 
     expect(current_path).to eq("/merchants/#{@merchant.id}/bulk_discounts/#{discount_1.id}")
-    expect(page).to_not have_content(10)
-    expect(page).to_not have_content(20)
-    expect(page).to have_content(22)
-    expect(page).to have_content(2)
+    within "#details" do
+      expect(page).to_not have_content(10)
+      expect(page).to_not have_content(20)
+      expect(page).to have_content(22)
+      expect(page).to have_content(2)
+    end
   end
 
   it 'requires all fields to be entered when editing the discount' do
