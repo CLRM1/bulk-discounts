@@ -32,6 +32,11 @@
       <li>
         <p>Status: <%= @invoice.get_invoice_item(item.id).status %></p>
       </li>
+      <li>
+        <% if @invoice.bulk_discounts.first != nil && @invoice.total_discounted_revenue != 0 %>
+          <%= link_to "Bulk Discount", "/merchants/#{@invoice.get_invoice_item(item.id).item.merchant_id}/bulk_discounts/#{@invoice.bulk_discounts.first.id}" %>
+        <% end %>
+      </li>
     </ul>
     <%= form_with url: "/merchants/#{@invoice.get_invoice_item(item.id).item.merchant_id}/invoices/#{@invoice.id}?item_id=#{item.id}",
                method: :patch, local: true do |form| %>
