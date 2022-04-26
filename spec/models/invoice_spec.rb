@@ -55,7 +55,7 @@ RSpec.describe Invoice do
     end
 
     it '.total_discounted_revenue returns the sum of all items minus the eligible discounts (20% for 10)' do
-      merchant = Merchant.create!(name: 'Brylan')
+      merchant = Merchant.create!(name: 'Chris')
       discount_1 = merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
       item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
       item_2 = merchant.items.create!(name: 'Can', unit_price: 3, description: 'Soda')
@@ -65,7 +65,7 @@ RSpec.describe Invoice do
       item_1.invoice_items.create!(invoice_id: invoice.id, quantity: 10, unit_price: 100, status: 2)
       item_2.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 4, status: 2)
       item_3.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 4, status: 2)
-
+      # require 'pry'; binding.pry
       expect(invoice.total_revenue).to eq(1024)
       expect(invoice.total_discounted_revenue).to eq(824)
     end
