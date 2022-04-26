@@ -74,7 +74,17 @@ RSpec.describe 'merchant invoice show page' do
     # Then I see the total revenue for my merchant from this invoice (not including discounts)
     # And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
     it 'displays the total discounted revenue for the merchant from the invoice (20% for 10 items)' do
-      discount_1 = @merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
+      merchant = Merchant.create!(name: 'Chris')
+      discount_1 = merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 3, description: 'Soda')
+      item_3 = merchant.items.create!(name: 'Bowl', unit_price: 15, description: 'Soda')
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice = customer.invoices.create(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      item_1.invoice_items.create!(invoice_id: invoice.id, quantity: 10, unit_price: 100, status: 2)
+      item_2.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 400, status: 2)
+      item_3.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 400, status: 2)
+      visit "/merchants/#{merchant.id}/invoices/#{invoice.id}"
       expect(page).to have_content("Total Revenue: $22.00")
       expect(page).to have_content("Total Discounted Revenue: $20.00")
     end
