@@ -8,6 +8,7 @@ class InvoiceItem < ApplicationRecord
   belongs_to :invoice
   has_many :transactions, through: :invoice
   has_many :merchants, through: :item
+  has_many :bulk_discounts
   has_many :bulk_discounts, through: :item
 
   enum status: ['pending', 'packaged', 'shipped']

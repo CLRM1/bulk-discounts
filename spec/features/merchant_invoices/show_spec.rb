@@ -76,7 +76,7 @@ RSpec.describe 'merchant invoice show page' do
     it 'displays the total discounted revenue for the merchant from the invoice (20% for 10 items)' do
       discount_1 = @merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
       expect(page).to have_content("Total Revenue: $22.00")
-      expect(page).to have_content("Total Discounted Revenue: $22.00")
+      expect(page).to have_content("Total Discounted Revenue: $20.00")
     end
   end
 end
