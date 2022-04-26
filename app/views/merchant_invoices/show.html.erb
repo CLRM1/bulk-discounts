@@ -48,5 +48,5 @@
 <% end %>
 
 <% if @invoice.total_discounted_revenue != 0 %>
-  <h2>Total Discounted Revenue: $<%= @invoice.total_discounted_revenue.to_s.insert(-3,".") %></h2>
+  <h2>Total Discounted Revenue: $<%= @invoice.total_discounted_revenue.to_s.insert(-3,".")  %></h2>
 <% end %>

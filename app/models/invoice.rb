@@ -19,13 +19,13 @@ class Invoice < ApplicationRecord
   end
 
   def total_discounted_revenue
-    # require 'pry'; binding.pry
     gross_revenue = total_revenue
     discount = InvoiceItem.joins(:bulk_discounts)
       .where('invoice_items.quantity >= bulk_discounts.quantity_threshold')
-      .select('invoice_items.id, max(invoice_items.unit_price * invoice_items.quantity * (bulk_discounts.percentage_discount/100.00)) as discount')
-      .group('invoice_items.id')
+      .select('invoice_items.id, (invoice_items.unit_price * invoice_items.quantity * (bulk_discounts.percentage_discount/100.00)) as discount')
+      .group('invoice_items.id', 'bulk_discounts.percentage_discount')
       .sum(&:discount)
-    gross_revenue - discount
+    total_discounted_revenue = gross_revenue - discount.to_i
+    total_discounted_revenue
   end
 end
