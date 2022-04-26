@@ -8,12 +8,11 @@ RSpec.describe 'merchant invoice show page' do
 
     @item_1 = @merchant.items.create!(name: 'Bottle', unit_price: 100, description: 'H20')
     @item_2 = @merchant.items.create!(name: 'Can', unit_price: 500, description: 'Soda')
-    @item_3 = @merchant_2.items.create!(name: 'Jar', unit_price: 400, description: 'Jelly')
 
     @customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
     @invoice_1 = @customer.invoices.create!(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
-    @invoice_1.invoice_items.create!(item_id: @item_1.id, status: "shipped", quantity: 8, unit_price: 100)
-    @invoice_1.invoice_items.create!(item_id: @item_2.id, status: "packaged", quantity: 5, unit_price: 500)
+    @item_1.invoice_items.create!(invoice_id: @invoice_1.id, quantity: 10, unit_price: 100, status: 2)
+    @item_2.invoice_items.create!(invoice_id: @invoice_1.id, quantity: 3, unit_price: 400, status: 2)
 
     visit "/merchants/#{@merchant.id}/invoices/#{@invoice_1.id}"
   end
@@ -35,23 +34,20 @@ RSpec.describe 'merchant invoice show page' do
 
     it 'next to each item should be its quantity, price, and invoice_item status' do
       within "#item-#{@item_1.id}" do
-        expect(page).to have_content("Quantity: 8")
+        expect(page).to have_content("Quantity: 10")
         expect(page).to have_content("Price per Item: $1.00")
         expect(page).to have_content("Status: shipped")
       end
 
       within "#item-#{@item_2.id}" do
-        expect(page).to have_content("Quantity: 5")
-        expect(page).to have_content("Price per Item: $5.00")
-        expect(page).to have_content("Status: packaged")
+        expect(page).to have_content("Quantity: 3")
+        expect(page).to have_content("Price per Item: $4.00")
+        expect(page).to have_content("Status: shipped")
       end
     end
 
     it "displays the total revenue for all items on the invoice" do
-      @item_1.invoice_items.create!(invoice_id: @invoice_1.id, quantity: 3, unit_price: 4, status: 2)
-      @item_2.invoice_items.create!(invoice_id: @invoice_1.id, quantity: 3, unit_price: 4, status: 2)
-      @item_3.invoice_items.create!(invoice_id: @invoice_1.id, quantity: 3, unit_price: 4, status: 2)
-      expect(page).to have_content("Total Revenue: $33.00")
+      expect(page).to have_content("Total Revenue: $22.00")
     end
 
     it 'displays a select box to change an invoice_item status' do
@@ -71,8 +67,25 @@ RSpec.describe 'merchant invoice show page' do
       end
     end
 
-    # it 'should have a link to the github info page' do
-    #   expect(page).to have_link('GitHub Repository info')
-    # end
+    # Merchant Invoice Show Page: Total Revenue and Discounted Revenue
+#
+    # As a merchant
+    # When I visit my merchant invoice show page
+    # Then I see the total revenue for my merchant from this invoice (not including discounts)
+    # And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
+    it 'displays the total discounted revenue for the merchant from the invoice (20% for 10 items)' do
+      merchant = Merchant.create!(name: 'Chris')
+      discount_1 = merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 3, description: 'Soda')
+      item_3 = merchant.items.create!(name: 'Bowl', unit_price: 15, description: 'Soda')
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice = customer.invoices.create(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      item_1.invoice_items.create!(invoice_id: invoice.id, quantity: 10, unit_price: 100, status: 2)
+      item_2.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 400, status: 2)
+      visit "/merchants/#{merchant.id}/invoices/#{invoice.id}"
+      expect(page).to have_content("Total Revenue: $22.00")
+      expect(page).to have_content("Total Discounted Revenue: $20.00")
+    end
   end
 end
