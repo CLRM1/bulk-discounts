@@ -65,9 +65,34 @@ RSpec.describe Invoice do
       item_1.invoice_items.create!(invoice_id: invoice.id, quantity: 10, unit_price: 100, status: 2)
       item_2.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 4, status: 2)
       item_3.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 4, status: 2)
-      # require 'pry'; binding.pry
       expect(invoice.total_revenue).to eq(1024)
       expect(invoice.total_discounted_revenue).to eq(824)
     end
+
+#     Example 1
+#
+# Merchant A has one Bulk Discount
+# Bulk Discount A is 20% off 10 items
+# Invoice A includes two of Merchant A’s items
+# Item A is ordered in a quantity of 5
+# Item B is ordered in a quantity of 5
+# In this example, no bulk discounts should be applied.
+
+    it '.total_discounted_revenue does not apply discount when the quantity threshold has not been met (ex1)' do
+      merchant = Merchant.create!(name: 'Chris')
+      discount_1 = merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 3, description: 'Soda')
+      item_3 = merchant.items.create!(name: 'Bowl', unit_price: 15, description: 'Soda')
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice = customer.invoices.create(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      item_1.invoice_items.create!(invoice_id: invoice.id, quantity: 5, unit_price: 100, status: 2)
+      item_2.invoice_items.create!(invoice_id: invoice.id, quantity: 5, unit_price: 4, status: 2)
+      item_3.invoice_items.create!(invoice_id: invoice.id, quantity: 3, unit_price: 4, status: 2)
+      expect(invoice.total_revenue).to eq(532)
+      expect(invoice.total_discounted_revenue).to eq(532)
+    end
+
+
   end
 end
