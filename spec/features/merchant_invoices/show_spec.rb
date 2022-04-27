@@ -67,7 +67,7 @@ RSpec.describe 'merchant invoice show page' do
       end
     end
 
-    it 'displays the total discounted revenue for the merchant from the invoice (20% for 10 items)' do
+    it 'displays the total discounted revenue for the merchant from the invoice (ex1)' do
       merchant = Merchant.create!(name: 'Chris')
       discount_1 = merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
       item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
@@ -82,11 +82,57 @@ RSpec.describe 'merchant invoice show page' do
       expect(page).to have_content("Total Discounted Revenue: $20.00")
     end
 
-    # Merchant Invoice Show Page: Link to applied discounts
-    #
-    # As a merchant
-    # When I visit my merchant invoice show page
-    # Next to each invoice item I see a link to the show page for the bulk discount that was applied (if any)
+    it 'displays the total discounted revenue when there are two discounts and both meet the threshold (ex3)' do
+      merchant = Merchant.create!(name: 'Chris')
+      discount_1 = merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
+      discount_2 = merchant.bulk_discounts.create(percentage_discount: 30, quantity_threshold: 15)
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 3, description: 'Soda')
+      item_3 = merchant.items.create!(name: 'Bowl', unit_price: 15, description: 'Soda')
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice = customer.invoices.create(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      item_1.invoice_items.create!(invoice_id: invoice.id, quantity: 12, unit_price: 100, status: 2)
+      item_2.invoice_items.create!(invoice_id: invoice.id, quantity: 15, unit_price: 400, status: 2)
+      visit "/merchants/#{merchant.id}/invoices/#{invoice.id}"
+      expect(page).to have_content("Total Revenue: $72.00")
+      expect(page).to have_content("Total Discounted Revenue: $51.60")
+    end
+
+    it 'displays the total discounted revenue when there are two discounts and both meet the threshold of the first (ex4)' do
+      merchant = Merchant.create!(name: 'Chris')
+      discount_1 = merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
+      discount_2 = merchant.bulk_discounts.create(percentage_discount: 15, quantity_threshold: 15)
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 3, description: 'Soda')
+      item_3 = merchant.items.create!(name: 'Bowl', unit_price: 15, description: 'Soda')
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice = customer.invoices.create(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      item_1.invoice_items.create!(invoice_id: invoice.id, quantity: 12, unit_price: 100, status: 2)
+      item_2.invoice_items.create!(invoice_id: invoice.id, quantity: 15, unit_price: 400, status: 2)
+      visit "/merchants/#{merchant.id}/invoices/#{invoice.id}"
+      expect(page).to have_content("Total Revenue: $72.00")
+      expect(page).to have_content("Total Discounted Revenue: $57.60")
+    end
+
+    it 'displays the total discounted revenue when there are two merchants (ex5)' do
+      merchant = Merchant.create!(name: 'Chris')
+      merchant_b = Merchant.create!(name: 'Sophie')
+      discount_1 = merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
+      discount_2 = merchant.bulk_discounts.create(percentage_discount: 30, quantity_threshold: 15)
+      item_1 = merchant.items.create!(name: 'Bottle', unit_price: 10, description: 'H20')
+      item_2 = merchant.items.create!(name: 'Can', unit_price: 3, description: 'Soda')
+      item_3 = merchant.items.create!(name: 'Bowl', unit_price: 15, description: 'Soda')
+      item_4 = merchant_b.items.create!(name: 'Bowl', unit_price: 15, description: 'Soda')
+      customer = Customer.create!(first_name: "Billy", last_name: "Jonson")
+      invoice = customer.invoices.create(status: "in progress", created_at: Time.parse("2022-04-12 09:54:09"))
+      item_1.invoice_items.create!(invoice_id: invoice.id, quantity: 12, unit_price: 100, status: 2)
+      item_2.invoice_items.create!(invoice_id: invoice.id, quantity: 15, unit_price: 400, status: 2)
+      item_4.invoice_items.create!(invoice_id: invoice.id, quantity: 15, unit_price: 400, status: 2)
+      visit "/merchants/#{merchant.id}/invoices/#{invoice.id}"
+      expect(page).to have_content("Total Revenue: $132.00")
+      expect(page).to have_content("Total Discounted Revenue: $111.60")
+    end
+
     it 'has links to applied discounts' do
       merchant = Merchant.create!(name: 'Chris')
       discount_1 = merchant.bulk_discounts.create(percentage_discount: 20, quantity_threshold: 10)
@@ -100,7 +146,6 @@ RSpec.describe 'merchant invoice show page' do
       visit "/merchants/#{merchant.id}/invoices/#{invoice.id}"
       within "#item-#{item_1.id}" do
         click_link "Bulk Discount"
-        # save_and_open_page
         expect(current_path).to eq("/merchants/#{merchant.id}/bulk_discounts/#{discount_1.id}")
       end
       expect(page).to have_content(discount_1.id)
