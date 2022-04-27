@@ -34,7 +34,10 @@
       </li>
     </ul>
     <p>
-      <% if @invoice.bulk_discounts.first != nil && @invoice.total_discounted_revenue != 0 && @invoice.get_invoice_item(item.id).quantity >= @invoice.bulk_discounts.first.quantity_threshold %>
+      <% if @invoice.bulk_discounts.first != nil &&
+          @invoice.total_discounted_revenue != 0 &&
+          @invoice.get_invoice_item(item.id).quantity >=
+          @invoice.bulk_discounts.first.quantity_threshold %>
       <%= link_to "Bulk Discount", "/merchants/#{@invoice.get_invoice_item(item.id).item.merchant_id}/bulk_discounts/#{@invoice.bulk_discounts.first.id}" %>
       <% end %>
     </p>
@@ -52,6 +55,6 @@
   <h2>Total Revenue: $<%= @invoice.total_revenue.to_s.insert(-3,".") %> </h2>
 <% end %>
 
-<% if @invoice.total_discounted_revenue != 0 && @invoice.bulk_discounts.first != nil %>
-  <h2>Total Discounted Revenue: $<%= @invoice.total_discounted_revenue.to_s.insert(-3,".")  %></h2>
-<% end %>
+  <% if @invoice.total_discounted_revenue != 0 && @invoice.bulk_discounts.first != nil && %>
+    <h2>Total Discounted Revenue: $<%= @invoice.total_discounted_revenue.to_s.insert(-3,".")  %></h2>
+  <% end %>
