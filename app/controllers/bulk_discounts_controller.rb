@@ -1,6 +1,6 @@
-class MerchantDiscountsController < ApplicationController
+class BulkDiscountsController < ApplicationController
   def index
-    @merchant = Merchant.find(params[:id])
+    @merchant = Merchant.find(params[:merchant_id])
     @holidays = HolidayFacade.new.holidays
   end
 
@@ -9,11 +9,11 @@ class MerchantDiscountsController < ApplicationController
   end
 
   def new
-    @merchant = Merchant.find(params[:id])
+    @merchant = Merchant.find(params[:merchant_id])
   end
 
   def create
-    @merchant = Merchant.find(params[:id])
+    @merchant = Merchant.find(params[:merchant_id])
     @merchant.bulk_discounts.create(percentage_discount: params[:percentage_discount],
                                     quantity_threshold: params[:quantity_threshold])
     @merchant.save
