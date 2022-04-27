@@ -4,13 +4,6 @@ Rails.application.routes.draw do
   resources :merchants do
     resources :bulk_discounts
   end
-  # get "/merchants/:id/bulk_discounts", to: "merchant_discounts#index"
-  # get "/merchants/:id/bulk_discounts/new", to: "merchant_discounts#new"
-  # post "/merchants/:id/bulk_discounts", to: "merchant_discounts#create"
-  # get "/merchants/:id/bulk_discounts/:id", to: "merchant_discounts#show"
-  # get "/merchants/:id/bulk_discounts/:id/edit", to: "merchant_discounts#edit"
-  # patch "/merchants/:id/bulk_discounts/:id", to: "merchant_discounts#update"
-  # delete "/merchants/:id/bulk_discounts/:id", to: "merchant_discounts#destroy"
 
   get "/merchants/:id/items", to: "merchant_items#index"
   get "/merchants/:id/items/new", to: "merchant_items#new"
